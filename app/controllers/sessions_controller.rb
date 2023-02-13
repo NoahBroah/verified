@@ -1,16 +1,19 @@
 class SessionsController < ApplicationController
-    before_action :authorize
-    skip_before_action :authorize, only: :show
-  
-    def show
-      render json: current_user, status: :ok
-    end
-  
-   def current_user
-    @current_user ||=User.find_by(id: session[:user_id])
-   end
+    skip_before_action :authorize, only: :create
     
-    def authorize
-      render json: { error: "Not Authorized" }, status: :unauthorized unless current_user
+    def create
+        user = User.find_by(email: params[:email])
+        if user&.authenticate(params[:password])
+          session[:user_id] = user.id
+          render json: user, status: :created
+        else
+            render json: { errors: "Invalid Username or Password"}, status: :unauthorized
+        end
+      end
+            
+
+    def destroy
+        session.delete :user_id
+        head :no_content
     end
 end
