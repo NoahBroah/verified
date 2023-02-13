@@ -6,8 +6,7 @@ class UsersController < ApplicationController
     end
 
     def show
-        user = User.find_by(id: params[:id])
-        render json: user, stats: :ok
+        render json: current_user, stats: :ok
     end
 
     def create
