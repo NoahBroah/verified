@@ -34,7 +34,7 @@ class UsersController < ApplicationController
         user = User.find_by(id: params[:id])
         if user.id = current_user.id
             user.delete
-            head: no_content
+            head :no_content
         else
             render json: { errors: ["Not Authorized"] }, status: :unauthorized
         end
