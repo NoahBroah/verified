@@ -10,8 +10,58 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 0) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_13_001014) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "companies", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "company_jobs", force: :cascade do |t|
+    t.bigint "company_id", null: false
+    t.bigint "job_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_company_jobs_on_company_id"
+    t.index ["job_id"], name: "index_company_jobs_on_job_id"
+  end
+
+  create_table "jobs", force: :cascade do |t|
+    t.string "company"
+    t.string "position"
+    t.text "job_duties"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_jobs_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email"
+    t.string "password_digest"
+    t.boolean "is_admin"
+    t.string "first_name"
+    t.string "last_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "verifications", force: :cascade do |t|
+    t.boolean "verified", default: false
+    t.bigint "user_id", null: false
+    t.bigint "job_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["job_id"], name: "index_verifications_on_job_id"
+    t.index ["user_id"], name: "index_verifications_on_user_id"
+  end
+
+  add_foreign_key "company_jobs", "companies"
+  add_foreign_key "company_jobs", "jobs"
+  add_foreign_key "jobs", "users"
+  add_foreign_key "verifications", "jobs"
+  add_foreign_key "verifications", "users"
 end
