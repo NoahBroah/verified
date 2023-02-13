@@ -6,4 +6,8 @@ class User < ApplicationRecord
     validates :email, presence: true, uniqueness: true
     validates :password, length: { minimum: 4 }, on: :create
     has_secure_password
+
+    def is_employer?
+        self.is_employer
+    end
   end
