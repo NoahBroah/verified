@@ -3,8 +3,19 @@ import { Link } from 'react-router-dom';
 import '../styles/Navbar.css';
 import { UserContext } from "../UserContext";
 
-const Navbar = ({  handleLogout }) => {
+const Navbar = () => {
+
     const [user, setUser] = useContext(UserContext);
+    function handleLogout() {
+      fetch("/logout", {
+        method: "DELETE",
+      }).then((resp) => {
+        if (resp.ok) {
+          setUser(null);
+          alert("You have been logged out");
+        }
+      });
+    }
   return (
     <nav className="navbar">
       <Link to="/" className="navbar-brand">JobVerify</Link>

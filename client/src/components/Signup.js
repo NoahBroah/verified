@@ -5,12 +5,14 @@ import '../styles/Signup.css'
 
 const Signup = () => {
   const [user, setUser] = useContext(UserContext);
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEmployer, setIsEmployer] = useState(false);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
     fetch("/users", {
       method: "POST",
       headers: {
@@ -21,6 +23,8 @@ const Signup = () => {
           email: email,
           password: password,
           is_employer: isEmployer,
+          first_name: firstName,
+          last_name: lastName
         },
       }),
     })
@@ -40,13 +44,35 @@ const Signup = () => {
         <form onSubmit={handleSubmit}>
           <h2>Signup</h2>
           <div className="form-group">
+            <label>First Name</label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter First Name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Last Name</label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter Last Name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
             <label>Email</label>
             <input
               type="email"
               className="form-control"
               placeholder="Enter email"
               value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
@@ -58,7 +84,7 @@ const Signup = () => {
               className="form-control"
               placeholder="Enter password"
               value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
