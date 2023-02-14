@@ -1,11 +1,16 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { JobsContext } from '../JobsContext';
 import '../styles/Navbar.css';
 import { UserContext } from "../UserContext";
 
-const Navbar = () => {
+function Navbar() {
+  const [user, setUser] = useContext(UserContext)
+  const [jobs, setJobs] = useContext(JobsContext)
+  console.log(user)
+  console.log(jobs)
 
-    const [user, setUser] = useContext(UserContext);
+   ;
     function handleLogout() {
       fetch("/logout", {
         method: "DELETE",
@@ -21,6 +26,12 @@ const Navbar = () => {
       <Link to="/" className="navbar-brand">JobVerify</Link>
       <div className="navbar-links">
         {user ? (
+          user.is_employer ? 
+          <>
+            <Link to="/profile" className="navbar-link">Profile</Link>
+            <Link to="/" onClick={handleLogout} className="navbar-link">Logout</Link>
+          </>
+          :
           <>
             <Link to="/profile" className="navbar-link">Profile</Link>
             <Link to="/" onClick={handleLogout} className="navbar-link">Logout</Link>

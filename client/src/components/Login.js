@@ -7,32 +7,35 @@ const Login = () => {
   const [user, setUser] = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setErrors] = useState("");
   const history = useHistory();
 
-  const handleSubmit = (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
-    const userData = {
+
+    const currentUser = {
       email: email,
       password: password,
     };
+
     fetch("/login", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(currentUser),
     })
       .then((resp) => resp.json())
-      .then((data) => {
-        if (data.id) {
-          setUser(data);
-          history.push("/");
+      .then((currentUser) => {
+        if (currentUser?.errors) {
+          console.log("Yikes");
+          setErrors([currentUser.errors]);
         } else {
-          setError(data.errors);
+          console.log("hey");
+          setUser(currentUser);
+          console.log(user)
+            history.push('/profile')
         }
       });
-  };
+  }
 
   return (
     <div className="login-container">

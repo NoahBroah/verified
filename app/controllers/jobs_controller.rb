@@ -12,7 +12,8 @@ class JobsController < ApplicationController
     end
   
     def create
-      job = current_user.jobs.create(job_params)
+      employee = @current_user
+      job = employee.jobs.create(job_params)
       if job.valid?
         render json: job, status: :created
       else

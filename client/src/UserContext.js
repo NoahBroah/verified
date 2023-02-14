@@ -9,12 +9,13 @@ const UserProvider = ({ children }) => {
         fetch("/auth").then((resp) => {
           if (resp.ok) {
             resp.json().then((user) => setUser(user));
+            console.log(user)
           } else {
             console.log("Not good")
           }
         });
       },[] );
-
+      console.log(user)
     return (
         <UserContext.Provider value={[ user, setUser ]}>
             { children }

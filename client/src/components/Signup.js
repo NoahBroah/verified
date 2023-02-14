@@ -1,41 +1,47 @@
 import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { UserContext } from "../UserContext";
-import '../styles/Signup.css'
+import "../styles/Signup.css";
 
 const Signup = () => {
   const [user, setUser] = useContext(UserContext);
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEmployer, setIsEmployer] = useState(false);
+  const [erros, setErrors] = useState([])
+  const history = useHistory();
 
   const handleSubmit = (e) => {
+    const newUser = {
+      first_name: firstName,
+      last_name: lastName,
+      email: email,
+      password: password,
+      is_employer: isEmployer,
+    };
+
     e.preventDefault();
     fetch("/users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        user: {
-          email: email,
-          password: password,
-          is_employer: isEmployer,
-          first_name: firstName,
-          last_name: lastName
-        },
-      }),
+      body: JSON.stringify(newUser),
     })
-      .then((resp) => {
-        if (resp.ok) {
-          resp.json().then((user) => setUser(user));
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    .then((resp) => resp.json())
+    .then((newUser) => {
+      if (newUser?.errors) {
+        setErrors([newUser.errors]);
+        console.log("Yikes");
+      } else {
+        console.log("hey");
+        setUser(newUser);
+        console.log(user)
+          history.push('/profile')
+      }
+    });
   };
 
   return (
